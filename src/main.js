@@ -20,10 +20,6 @@ Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = config.serverUrl;
 
-Vue.prototype.sleep = function(time) {
-    var startTime = new Date().getTime() + parseInt(time, 10);
-    while(new Date().getTime() < startTime) {}
-};
 
 // new Vue({
 //   render: h => h(App),
@@ -49,6 +45,10 @@ const routes = [
     {
         path: "/register",
         component: ()=>import(/* webpackChunkName: "register" */"@/Register.vue")
+    },
+    {
+        path: "/upload-video",
+        component: ()=>import(/* webpackChunkName: "upload-video" */"@/UploadVideo.vue")
     },
     {
         path: "/404",

@@ -271,12 +271,18 @@ export default {
             this.axios.get("logout")
             .then((response) => {
                 let rep = response.data;
-                this.$router.go(0);
-                this.notice("退出登录成功！")
+                this.$notify({
+                    title: "提示",
+                    message: "退出登录成功！",
+                    type: "success"
+                });
                 this.account.isLogin = false;
             })
             .catch((error) => {
-                this.$router.go(0);
+                this.$notify.error({
+                    title: "提示",
+                    message: "退出登录失败:" + error,
+                });
             });
         },
         notice(msg) {

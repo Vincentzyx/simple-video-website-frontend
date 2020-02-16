@@ -19,7 +19,12 @@ import DPlayer from 'dplayer';
 export default {
     props: [
         "videoUrl",
-        "thumbnail"
+        "thumbnail",
+        "danmakuId",
+        "account",
+        "videoInfo",
+        "onPlay",
+        "onEnded"
     ],
     components: {
 
@@ -38,22 +43,26 @@ export default {
     methods: {
         initPlayer() {
             let that = this;
-            let dp = new DPlayer({
-            container: that.$refs.player,
-            screenshot: true,
-            video: {
-                url: that.videoUrl,
-                pic: that.thumbnail,
-                thumbnails: that.thumbnail
-            }
-            // subtitle: {
-            //     url: 'webvtt.vtt',
-            // },
-            // danmaku: {
-            //     id: 'demo',
-            //     api: 'https://api.prprpr.me/dplayer/',
-            // },
-        });
+            this.player = new DPlayer({
+                container: that.$refs.player,
+                screenshot: true,
+                video: {
+                    url: that.videoUrl,
+                    pic: that.thumbnail,
+                    thumbnails: that.thumbnail
+                },
+                // subtitle: {
+                //     url: 'webvtt.vtt',
+                // },
+                danmaku: {
+                    id: that.danmakuId,
+                    api: 'https://danmaku.xwhite.studio/api/dplayer/',
+                    user: that.account.uid.toString()
+                }
+            });
+
+            this.player.on('play', this.onPlay);
+            this.player.on('ended', this.onEnded);
         }
     }
 }

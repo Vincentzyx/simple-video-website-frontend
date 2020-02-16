@@ -66,7 +66,7 @@ export default {
         this.loadVideoList();
     },
     beforeDestroy() {
-        clearInterval(this.scrollTimer);
+        clearInterval(this.scrollTimer);    
     },
     methods: {
         toVideo(vid) {

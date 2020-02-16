@@ -160,7 +160,7 @@ export default {
                     this.account.uid = rep.data.uid;
                     this.account.avatar = rep.data.avatar;
                     this.account.isLogin = true;
-                    this.$router.push("/");
+                    this.$router.go(-1); 
                     this.$notify({
                         title: "提示",
                         message: "登录成功！",
