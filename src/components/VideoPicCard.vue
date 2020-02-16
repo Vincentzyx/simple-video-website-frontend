@@ -30,7 +30,7 @@
     position:absolute;
     bottom: 5%;
     margin-left: 5%;
-    opacity: 0%;
+    opacity: 0;
     transition: all 0.3s ease;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .card-pic:hover .info-bottom {
-    opacity: 100%;
+    opacity: 1;
 }
 
 </style>

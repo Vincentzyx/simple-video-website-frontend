@@ -21,13 +21,12 @@
                 type="textarea"
                 :rows="3"
                 :placeholder="account.isLogin ? '畅所欲言吧！' : '登录后即可发送评论！'"
-                disabled="account.isLogin"
-                :autosize="True"
+                :disabled="!account.isLogin"
                 maxlength="300"
                 show-word-limit
                 v-model="myComment">
                 </el-input>
-                <el-button disabled="account.isLogin" @click.native="sendComment()" type="primary" class="btn-send" icon="el-icon-s-promotion"></el-button>
+                <el-button :disabled="!account.isLogin" @click.native="sendComment()" type="primary" class="btn-send" icon="el-icon-s-promotion"></el-button>
             </div>
             <div class="comments">
                 <span class="comment-area-title">评论区</span>
@@ -150,6 +149,10 @@
     margin-bottom: 50px;
 }
 
+.video-action span {
+    color: gray;
+}
+
 .video-action {
     margin: auto;
     margin-top: 10px;
@@ -172,7 +175,7 @@
     vertical-align: middle;
 }
 
-.video-action .btn span {
+.video-action span {
     vertical-align: middle;
 }
 
@@ -185,6 +188,10 @@
 
 .video-action .btn:hover {
     color:rgb(108, 166, 231)
+}
+
+.video-action .btn:active {
+    color:rgb(64, 125, 196)
 }
 
 .video-action .btn:hover .action-icon {
@@ -454,11 +461,10 @@
             },
             async initVideo() {
                 await this.axios.get("video-info?vid=" + this.$route.params.vid).then((response) => {
-                    let data = response.data;
-                    if (data.code == 0)
+                    let rep = response.data;
+                    if (rep.code == 0)
                     {
-                        data = data.data;
-                        this.videoInfo = data;
+                        this.videoInfo = rep.data;
                         this.followAuthor = this.videoInfo.author.isFollow;
                     }
                     else

@@ -9,18 +9,14 @@
                 <span class="btn btn-login" @click="changePath('/login')">登录</span>
                 <span class="btn btn-reg" @click="changePath('/register')">注册</span>
             </div>
-            <div v-else class="user-info" @click="changePath('/user/' + account.uid)">
-                <div class="avatar" :style="'background-image: url(' + this.config.serverUrl + account.avatar + ')'"></div>
-                <div class="userpage-link" :to="'/user/' + account.uid">{{ account.username }}</div>
+            <div v-else class="user-info">
+                <div class="avatar" @click="changePath('/user/' + account.uid)" :style="'background-image: url(' + this.config.serverUrl + account.avatar + ')'"></div>
+                <div class="userpage-link" @click="changePath('/user/' + account.uid)">{{ account.username }}</div>
                 <div class="dropdown">
                     <div class="dropdown-item dropdown-item-user">个人中心</div>
                     <div class="dropdown-item dropdown-item-logout" @click="logout()">退出登录</div>
                 </div>
             </div>
-        </div>
-        <div class="notice-bar" :class="{showNotice: showNotice}">
-            <div class="notice-msg">{{noticeData.msg}}</div>
-            <div class="btn-close" @click="closeNotice()"></div>
         </div>
     </nav>
 </template>
@@ -45,31 +41,6 @@
     .btn-close:active {
         background-color:rgb(253, 205, 205)
     }
-    
-    .notice-msg {
-        margin-left: 20px;
-    }
-    
-    .notice-bar {
-        position: fixed;
-        left: -310px;
-        top: 100px;
-
-        height: 50px;
-        line-height: 50px;
-        color: #333;
-        font-size: 1.1rem;
-        border-radius: 3px;
-        box-shadow: 0 0 5px rgb(74, 109, 86);
-        background-color: rgb(225, 255, 235);
-        width: 300px;
-        transition: all 1s;
-        z-index: 1;
-    }
-
-    .showNotice {
-        left: 0px !important;
-    }
 
     .dropdown-item-user {
         margin-top: 20px;
@@ -77,6 +48,7 @@
 
     .dropdown-item {
         margin-bottom: 15px;
+        cursor: pointer;
     }
 
     .dropdown-item:hover {
@@ -97,7 +69,7 @@
         box-shadow: 0 0 5px gray;
         transition: all 0.3s;
         z-index: 999;
-        
+        cursor:default;
     }
 
     .user-info:hover .dropdown {

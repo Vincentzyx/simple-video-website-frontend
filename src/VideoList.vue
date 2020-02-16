@@ -8,10 +8,17 @@
                 </video-pic-card>
             </div>
         </div>
+        <div class="loading-icon"><i class="el-icon-loading"></i></div>
     </div>
 </template>
 
 <style scoped>
+    .loading-icon {
+        text-align: center;
+        font-size: 3rem;
+        color:skyblue;
+    }
+
     .title {
         margin-left: 2%;
         margin-top: 30px;
@@ -54,7 +61,10 @@ export default {
         return {
             videoList: [],
             page: 1,
-            scrollTimer: 0
+            lastLoaded: 0,
+            scrollTimer: 0,
+            lastLoadedTime: Date.now() - 3000,
+            loading: false
         }
     },
     mounted() {
@@ -73,6 +83,7 @@ export default {
             this.$router.push("/v/" + vid);
         },
         loadVideoList() {
+            this.loading = true;
             if (this.$route.query.page !== undefined)
             {
                 this.page = Number(this.$route.query.page);
@@ -81,8 +92,9 @@ export default {
                 let rep = response.data;
                 if (rep.code == 0)
                 {
-                    this.videoList = this.videoList.concat(rep.data)
-                    this.lastUpdateTime = new Date().getTime()
+                    this.videoList = this.videoList.concat(rep.data);
+                    this.lastLoaded = this.page;
+                    this.loading = false;
                 }
             });
         },
@@ -93,10 +105,13 @@ export default {
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             let contentHeight = el.clientHeight;
             let toBottom = contentHeight - windowHeight - scrollTop;
-            if (toBottom < 10 && !this.finished && !this.loading) {
-                this.page++;
-                this.$route.query.page = this.page;
-                this.loadVideoList();
+            if (toBottom < 10 && !this.loading) {
+                if (this.lastLoaded = this.page)
+                {
+                    this.page++;
+                    this.$route.query.page = this.page;
+                    this.loadVideoList();
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
-const serverUrl = "http://localhost:8080/api/"
-const clientUrl = "http://localhost:8080/"
+const serverUrl = "/api/"
+const clientUrl = "/"
 
 export default {
     serverUrl,
