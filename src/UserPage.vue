@@ -41,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div class="no-video">{{(account.uid == userInfo.uid ? "你" : "TA") + '还没有发布过视频哦！'}}</div>
+            <div v-if="userVideoList.length == 0" class="no-video">{{(account.uid == userInfo.uid ? "你" : "TA") + '还没有发布过视频哦！'}}</div>
         </div>
     </div>
 </template>
