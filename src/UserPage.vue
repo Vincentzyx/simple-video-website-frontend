@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div class="avatar-container">
             <div class="avatar-cover"></div>
             <div>
@@ -19,10 +19,119 @@
                 <div class="info-follower">{{userInfo.follower}} 粉丝</div>
             </div>
         </div>
+        <div class="upload-btn">
+            <el-button @click.native="$router.push('/upload-video')" type="primary">投稿视频</el-button>
+        </div>
+        <div class="user-video-list">
+            <div class="show-video-title">{{ (account.uid == userInfo.uid ? "我" : "TA") + "的投稿" }}</div>
+            <div class="show-more-video" @click="$notify.error({title: '提示', message: '不给看'})">查看更多 <i class="el-icon-right"></i></div>
+            <div v-if="userVideoList.length > 0" class="show-list">
+                <div v-for="vinfo in userVideoList" :key="vinfo.vid" class="vid-info" @click="$router.push('/v/' + vinfo.vid)">
+                    <div class="vid-thumb" :style="'background-image: url(' + config.serverUrl + vinfo.thumbnail + ')'"></div>
+                    <div class="vid-title" :title="vinfo.title">{{vinfo.title}}</div>
+                    <div>
+                        <div class="view-count">
+                            <i class="el-icon-video-play"></i>
+                            {{vinfo.view}}
+                        </div>
+                        <div class="publish-date">
+                            <i class="el-icon-time"></i>
+                            {{displayDate(vinfo.publishdate)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="no-video">{{(account.uid == userInfo.uid ? "你" : "TA") + '还没有发布过视频哦！'}}</div>
+        </div>
     </div>
 </template>
 
 <style scoped>
+
+.no-video {
+    margin-top: 10px;
+    text-align: center;
+    line-height: 100px;
+    width: 100%;
+    height: 100px;
+    box-shadow: 0 0 5px gray;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+.show-video-title {
+    display: inline-block;
+}
+
+.show-more-video {
+    color:rgb(80, 167, 238);
+    display: inline-block;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+.show-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    overflow: hidden;
+    height: 300px;
+}
+
+.view-count {
+    float:left;
+}
+
+.publish-date {
+    float: right;
+}
+
+.el-icon-video-play {
+    margin-right: 2px;
+    vertical-align: center;
+}
+
+.el-icon-time {
+    margin-right: 2px;
+    vertical-align: center;
+}
+
+.vid-info:hover .vid-title {
+    color:rgb(51, 166, 211);
+}
+
+.vid-title {
+    height: 1.1rem;
+    margin: auto;
+    overflow: hidden;
+    vertical-align: center;
+    transition: all 0.3s;
+}
+
+.vid-info {
+    width: 160px;
+    height: 120px;
+    font-size: 12px;
+    line-height: 1.1rem;
+    margin: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.vid-thumb {
+    width: 160px;
+    height: 100px;
+    font-size: 0.8rem;
+    background-size: cover;
+}
+
+.upload-btn {
+    margin: 10px;
+}
 
 .avatar-cover {
     top: 0;
@@ -155,11 +264,14 @@
 
 <script>
 import ImageUpload from "vue-image-crop-upload"
-import { MessageBox } from 'element-ui';
+import VideoPicCard from "@/components/VideoPicCard"
+import { MessageBox, Button } from 'element-ui';
 
 export default {
     components: {
-        ImageUpload
+        ImageUpload,
+        "el-button": Button,
+        'video-pic-card': VideoPicCard
     },
     data() {
         return {
@@ -168,12 +280,15 @@ export default {
             account: this.$parent.account,
             userInfo: {
 
-            }
+            },
+            userVideoList: [],
+            videoListPage: 1
         }
     },
     mounted() {
         this.checkLogin();
         this.loadUserInfo();
+        this.loadUserVideoList();
     },
     beforeRouteUpdate(to, from, next) {
         next();
@@ -202,6 +317,21 @@ export default {
         }
     },
     methods: {
+        displayDate(dateStr) {
+            let date = dateStr.split(" ")[0];
+            let time = dateStr.split(" ")[1];
+            let year = date.split("-")[0];
+            let currentDate = new Date();
+            if (year == currentDate.getFullYear())
+            {
+                return date.split("-")[1] + "-" + date.split("-")[2];
+            }
+            else
+            {
+                return date;
+            }
+            
+        },
         checkLogin() {
 
         },
@@ -211,8 +341,8 @@ export default {
         cropUploadSuccess(jsonData, field){
             if (jsonData.code == 0)
             {
-                this.account.avatar = jsonData["data"]["avatar"];
                 this.userInfo.avatar = jsonData["data"]["avatar"];
+                this.account.avatar = jsonData["data"]["avatar"];
             }
             else
             {
@@ -222,17 +352,41 @@ export default {
         cropUploadFail(status, field){
 
         },
-        loadUserInfo() {
+        async loadUserInfo() {
             this.axios.get("user-info?uid=" + this.$route.params.uid)
             .then((response) => {
                 let rep = response.data;
                 if (rep.code == 0)
                 {
+                    // this.account.avatar = jsonData["data"]["avatar"];
                     this.userInfo = rep.data;
                 }
             })
             .catch((error) => {
                 
+            });
+        },
+        async loadUserVideoList() {
+            await this.axios.get("video-list?uid=" + this.$route.params.uid + "&page=" + this.videoListPage)
+            .then((response) => {
+                let rep = response.data;
+                if (rep.code == 0)
+                {
+                    this.userVideoList = rep.data;
+                }
+                else
+                {
+                    this.$notify.error({
+                        title: "错误",
+                        message: "获取用户投稿失败: " + rep.msg
+                    });
+                }
+            })
+            .catch((error) => {
+                this.$notify.error({
+                    title: "错误",
+                    message: "获取用户投稿失败: " + error.toString()
+                });
             });
         },
         startInputDescription() {

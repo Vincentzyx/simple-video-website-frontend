@@ -6,10 +6,12 @@ import VueAxios from 'vue-axios';
 import md5 from 'js-md5';
 import App from './App.vue';
 import config from "@/config.js";
+import uploader from 'vue-simple-uploader'
 
 Vue.use(VueAxios, axios);
 Vue.use(VueRouter);
 Vue.use(Icon);
+Vue.use(uploader);
 
 Vue.prototype.config = config;
 Vue.prototype.$md5 = md5;

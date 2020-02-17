@@ -13,7 +13,7 @@
                 <div class="avatar" @click="changePath('/user/' + account.uid)" :style="'background-image: url(' + this.config.serverUrl + account.avatar + ')'"></div>
                 <div class="userpage-link" @click="changePath('/user/' + account.uid)">{{ account.username }}</div>
                 <div class="dropdown">
-                    <div class="dropdown-item dropdown-item-user">个人中心</div>
+                    <div class="dropdown-item dropdown-item-user" @click="changePath('/user/' + account.uid)">个人中心</div>
                     <div class="dropdown-item dropdown-item-logout" @click="logout()">退出登录</div>
                 </div>
             </div>
