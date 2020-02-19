@@ -26,9 +26,18 @@
             <div class="show-video-title">{{ (account.uid == userInfo.uid ? "我" : "TA") + "的投稿" }}</div>
             <div class="show-more-video" @click="$notify.error({title: '提示', message: '不给看'})">查看更多 <i class="el-icon-right"></i></div>
             <div v-if="userVideoList.length > 0" class="show-list">
-                <div v-for="vinfo in userVideoList" :key="vinfo.vid" class="vid-info" @click="$router.push('/v/' + vinfo.vid)">
-                    <div class="vid-thumb" :style="'background-image: url(' + config.serverUrl + vinfo.thumbnail + ')'"></div>
-                    <div class="vid-title" :title="vinfo.title">{{vinfo.title}}</div>
+                <div v-for="vinfo in userVideoList" :key="vinfo.vid" class="vid-info">
+                    <div class="action-layer" v-if="vinfo.author.uid == account.uid">
+                        <div class="video-action">
+                            <i class="el-icon-more">
+                                <div class="dropdown-action">
+                                    <div class="btn-delete-video" @click="deleteVideo(vinfo.vid)">删除视频</div>
+                                </div>
+                            </i>
+                        </div>
+                    </div>
+                    <div class="vid-thumb" @click="$router.push('/v/' + vinfo.vid)" :style="'background-image: url(' + config.serverUrl + vinfo.thumbnail + ')'"></div>
+                    <div class="vid-title" @click="$router.push('/v/' + vinfo.vid)" :title="vinfo.title">{{vinfo.title}}</div>
                     <div>
                         <div class="view-count">
                             <i class="el-icon-video-play"></i>
@@ -47,6 +56,50 @@
 </template>
 
 <style scoped>
+.btn-delete-video:active {
+    color: rgb(156, 15, 15);
+}
+
+.btn-delete-video:hover {
+    color:rgb(255, 0, 0);
+}
+
+.el-icon-more:hover .dropdown-action {
+    opacity: 1;
+}
+
+.btn-delete-video {
+    color: rgb(197, 43, 43);
+}
+
+.dropdown-action {
+    position: absolute;
+    opacity: 0;
+    transition: all 0.3s;
+    left: 5px;
+    width: 80px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 0.8rem;
+    background-color: white;
+    box-shadow: 0 0 5px gray;
+    z-index: 50;
+}
+
+
+.video-action {
+    color: white;
+    position: absolute;
+    left: 136px;
+    top: 82px;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.video-action:hover {
+    color: skyblue;
+}
 
 .no-video {
     margin-top: 10px;
@@ -77,7 +130,7 @@
 .show-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content:  left;
     overflow: hidden;
     height: 300px;
 }
@@ -119,6 +172,7 @@
     line-height: 1.1rem;
     margin: 10px;
     margin-bottom: 20px;
+    position: relative;
     cursor: pointer;
 }
 
@@ -292,7 +346,9 @@ export default {
     },
     beforeRouteUpdate(to, from, next) {
         next();
+        this.checkLogin();
         this.loadUserInfo();
+        this.loadUserVideoList();
     },
     computed: {
         isSelf() {
@@ -317,6 +373,44 @@ export default {
         }
     },
     methods: {
+        deleteVideo(id){
+            this.$confirm('此操作将永久删除该视频, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.axios.post("del-video", "vid=" + id)
+                .then((response) => {
+                    let rep = response.data;
+                    if (rep.code == 0)
+                    {
+                        this.$message({
+                            type: 'success',
+                            message: '视频删除成功！'
+                        });
+                    }
+                    else
+                    {
+                        this.$message({
+                            type: 'error',
+                            message: '视频删除失败: ' + rep.msg
+                        });
+                    }
+
+                })
+                .catch((error) => {
+                    this.$message({
+                        type: 'error',
+                        message: '视频删除失败: ' + error
+                    });
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
+        },
         displayDate(dateStr) {
             let date = dateStr.split(" ")[0];
             let time = dateStr.split(" ")[1];

@@ -151,6 +151,7 @@ export default {
             }
 
             if (ifReturn) return;
+            this.status.loading = true;
             this.axios.post("login", "username=" + this.input.username.data + "&password=" + this.$md5(this.input.password.data))
             .then((response) => {
                 let rep = response.data;

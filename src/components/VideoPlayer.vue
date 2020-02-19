@@ -13,8 +13,11 @@
 </style>
 
 <script>
+import flvjs from "flv.js"
 import 'dplayer/dist/DPlayer.min.css';
 import DPlayer from 'dplayer';
+
+window.flvjs = flvjs;
 
 export default {
     props: [

@@ -174,7 +174,12 @@ export default {
                 let rep = response.data;
                 if (rep.code == 0)
                 {
-                    
+                    this.$notify({
+                        title: "提示",
+                        message: "注册成功！",
+                        type: "success"
+                    });
+                    this.$router.push("/login")
                 }
                 else if (rep.code == -20)
                 {

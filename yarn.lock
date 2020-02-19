@@ -3117,6 +3117,11 @@ es-to-primitive@^1.2.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
 
+es6-promise@^4.2.5:
+  version "4.2.8"
+  resolved "https://registry.npm.taobao.org/es6-promise/download/es6-promise-4.2.8.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fes6-promise%2Fdownload%2Fes6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
+  integrity sha1-TrIVlMlyvEBVPSduUQU5FD21Pgo=
+
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.npm.taobao.org/escape-html/download/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
@@ -3466,6 +3471,14 @@ flush-write-stream@^1.0.0:
   dependencies:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
+
+flv.js@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npm.taobao.org/flv.js/download/flv.js-1.5.0.tgz#fa59bed4391d70435cfa8740ac40ec0070ef98ae"
+  integrity sha1-+lm+1DkdcENc+odArEDsAHDvmK4=
+  dependencies:
+    es6-promise "^4.2.5"
+    webworkify "^1.5.0"
 
 follow-redirects@1.5.10:
   version "1.5.10"
@@ -6242,6 +6255,11 @@ qs@6.7.0:
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
 
+qs@^6.9.1:
+  version "6.9.1"
+  resolved "https://registry.npm.taobao.org/qs/download/qs-6.9.1.tgz#20082c65cb78223635ab1a9eaca8875a29bf8ec9"
+  integrity sha1-IAgsZct4IjY1qxqerKiHWim/jsk=
+
 qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -7968,6 +7986,11 @@ websocket-extensions@>=0.1.1:
   version "0.1.3"
   resolved "https://registry.npm.taobao.org/websocket-extensions/download/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
   integrity sha1-XS/yKXcAPsaHpLhwc9+7rBRszyk=
+
+webworkify@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npm.taobao.org/webworkify/download/webworkify-1.5.0.tgz#734ad87a774de6ebdd546e1d3e027da5b8f4a42c"
+  integrity sha1-c0rYendN5uvdVG4dPgJ9pbj0pCw=
 
 which-module@^2.0.0:
   version "2.0.0"

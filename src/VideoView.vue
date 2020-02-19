@@ -36,7 +36,7 @@
                         <div class="comment-text">
                             <div @click="toUserPage(comment.user.uid)" class="comment-username">{{comment.user.username}}</div>
                             <div class="comment-content">{{comment.text}}</div>
-                            <div class="comment-time">{{comment.time}}</div>
+                            <div class="comment-time">{{comment.time}} <span @click="delComment(comment.id)" v-if="comment.user.uid == account.uid || account.userlevel > 10" class="btn-delcomment">删除</span></div>
                         </div>
                         <div v-if="index != comments.length - 1" class="spliter"></div>
                     </div>
@@ -68,8 +68,9 @@
     border-bottom: 1px solid #ddd;
 }
 
-.comment {
-    
+.btn-delcomment {
+    float: right;
+    cursor: pointer;
 }
 
 .comment-content {
@@ -364,7 +365,7 @@
 </style>
 
 <script>
-
+    import qs from "qs"
     import VideoPlayer from '@/components/VideoPlayer'
     import { Button, Input } from 'element-ui';
 
@@ -415,7 +416,7 @@
         },
         methods: {
             sendComment() {
-                this.axios.get("send-comment?vid=" + this.videoInfo.vid + "&text=" + this.myComment)
+                this.axios.post("send-comment", qs.stringify({vid: this.videoInfo.vid, text: this.myComment}))
                 .then((response) => {
                     let rep = response.data;
                     if (rep.code == 0)
@@ -442,6 +443,43 @@
                         message: "发送失败: " + error
                     })
                 })
+            },
+            delComment(id) {
+                this.axios.post("del-comment", "id=" + id)
+                .then((response) => {
+                    let rep = response.data;
+                    if (rep.code == 0)
+                    {
+                        let index = 0;
+                        for (let comment of this.comments)
+                        {
+                            if (comment.id == id)
+                            {
+                                this.comments.splice(index, 1);
+                                break;
+                            }
+                            index++;
+                        }
+                        this.$notify({
+                            type: "success",
+                            title: "提示",
+                            message: "删除评论成功"
+                        });
+                    }
+                    else
+                    {
+                        this.$notify.error({
+                            title: "错误",
+                            message: "删除评论失败: " + rep.msg
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.$notify.error({
+                        title: "错误",
+                        message: "删除评论失败: " + error
+                    });
+                });
             },
             onPlay() {
 

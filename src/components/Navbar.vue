@@ -56,11 +56,13 @@
     }
 
     .dropdown {
+        text-align: center;
         top: 58px;
         height: 0;
         overflow: hidden;
-        left: 20px;
+        left: 0px;
         opacity: 1;
+        width: 80px;
         padding-left: 20px;
         padding-right: 20px;
         position: absolute;
